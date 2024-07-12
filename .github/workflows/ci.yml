@@ -1,0 +1,29 @@
+name: Build RPM
+
+on:
+  push:
+    branches: [main]
+    tags: "**"
+  pull_request:
+
+
+jobs:
+  build-rpm:
+    runs-on: ubuntu-latest
+    container:
+      image: almalinux:9
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: install deps
+        run: |
+          dnf install -y 'dnf-command(config-manager)'
+          dnf config-manager -y --set-enabled crb
+          dnf install -y cmake ninja-build gcc-c++ rpm-build
+
+      - name: build
+        run: | 
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCPACK_GENERATOR=RPM
+          cmake --build build --target package
+          rpm -qlp build/*.rpm | grep fibTargets-release.cmake
