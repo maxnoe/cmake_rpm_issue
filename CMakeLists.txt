@@ -10,7 +10,8 @@ target_include_directories(fib PUBLIC
     $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/include>
     $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
 )
-install(TARGETS fib EXPORT fibTargets)
+install(TARGETS fib EXPORT fibTargets COMPONENT Runtime)
+install(DIRECTORY include/fib DESTINATION ${CMAKE_INSTALL_INCLUDEDIR} COMPONENT Development)
 
 include(CMakePackageConfigHelpers)
 write_basic_package_version_file(
